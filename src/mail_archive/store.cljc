@@ -1,0 +1,57 @@
+(ns mail-archive.store
+  "The `Store` protocol — one query/transaction surface, two backends that must
+  return identical answers against the shared schema (`mail_archive/schema.edn`):
+
+    - LangchainDbStore  — wraps `langchain.db` (a Datomic-API-compatible in-memory
+                          EAV store; swappable to Datomic Local or a kotoba-server
+                          pod without touching a query). Defined here.
+    - DataScriptStore   — real DataScript (npm `datascript`), reachable only from
+                          nbb. Because npm datascript is `(:require [\"datascript\"])`
+                          — not loadable from a JVM `.cljc` namespace — that backend
+                          lives in its own nbb entrypoint `mail_archive/datascript_store.cljs`.
+                          The protocol is declared HERE so its shape is documented
+                          once; see that file's header for why it implements the same
+                          three operations as plain fns rather than reify-ing this
+                          protocol (nbb's SCI loader can't cleanly `:require` a JVM
+                          `.cljc` protocol namespace).
+
+  This is the same 'swap the backend, not the query' shape `gftd-talent-actor`'s
+  `talent.store` proves for its domain and ADR-2607122000 generalizes; a shared
+  contract test (`store_contract_test.cljc` on the JVM side, its twin
+  `datascript_contract_test.cljs` on the nbb side) asserts both backends answer
+  the same Datalog identically.
+
+  `transact!` accepts Datomic-style tx-data: entity maps with nested maps under
+  ref attributes auto-expanding to fresh tempids (see `langchain.db/expand-entity-map`),
+  and `[:db/add e a v]` vectors. `q` is Datalog; the db source is supplied by the
+  Store, so callers pass only extra `:in` inputs (a vector) — never the db itself."
+  (:require #?(:clj [clojure.edn :as edn])
+            #?(:clj [clojure.java.io :as io])
+            [langchain.db :as ldb]))
+
+(defprotocol Store
+  (transact! [this tx-data] "Transact Datomic-style tx-data; returns the tx report.")
+  (q [this query] [this query inputs]
+    "Datalog query. The db source is supplied by the Store; `inputs` (a vector)
+    are extra `:in` bindings beyond the implicit db.")
+  (pull [this pattern eid] "Datomic-style pull of `pattern` from entity `eid`."))
+
+#?(:clj
+   (defn load-schema
+     "Read the shared schema map from the classpath (mail_archive/schema.edn)."
+     []
+     (edn/read-string (slurp (io/resource "mail_archive/schema.edn")))))
+
+(defrecord LangchainDbStore [conn schema]
+  Store
+  (transact! [_ tx-data] (ldb/transact! conn tx-data))
+  (q [_ query] (ldb/q query (ldb/db conn)))
+  (q [_ query inputs] (apply ldb/q query (ldb/db conn) inputs))
+  (pull [_ pattern eid] (ldb/pull (ldb/db conn) pattern eid)))
+
+#?(:clj
+   (defn langchain-store
+     "A LangchainDbStore over a fresh in-memory conn using the given schema map
+     (defaults to the shared `mail_archive/schema.edn`)."
+     ([] (langchain-store (load-schema)))
+     ([schema] (->LangchainDbStore (ldb/create-conn schema) schema))))

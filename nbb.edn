@@ -1,0 +1,3 @@
+;; nbb resolves `mail-archive.datascript-store` and the contract-test namespace
+;; from these paths when running `npx nbb test/mail_archive/datascript_contract_test.cljs`.
+{:paths ["src" "test"]}

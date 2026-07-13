@@ -1,0 +1,6 @@
+{
+  "private": true,
+  "dependencies": {
+    "datascript": "^1.7.8"
+  }
+}
