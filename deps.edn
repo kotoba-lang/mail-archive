@@ -8,13 +8,17 @@
  ;; that backs LangchainDbStore).
  :deps {org.clojure/data.json {:mvn/version "2.5.0"}
         io.github.kotoba-lang/com-gmail
-        {:local/root "/Users/junkawasaki/github/com-junkawasaki/orgs/kotoba-lang/com-gmail"}
+        {:git/url "https://github.com/kotoba-lang/com-gmail.git"
+                                     :git/sha "de7932b50979c3e2918ecb09f2b8543c93a37bcb"}
         io.github.kotoba-lang/org-ietf-oauth2
-        {:local/root "/Users/junkawasaki/github/com-junkawasaki/orgs/kotoba-lang/org-ietf-oauth2"}
+        {:git/url "https://github.com/kotoba-lang/org-ietf-oauth2.git"
+                                     :git/sha "9dddbdcc58b02a72e28108ceb3bb4de5d10ba5c2"}
         io.github.kotoba-lang/mail
-        {:local/root "/Users/junkawasaki/github/com-junkawasaki/orgs/kotoba-lang/mail"}
+        {:git/url "https://github.com/kotoba-lang/mail.git"
+                                     :git/sha "2a00bd8d63842dd2d1cf38d35bfb66ae377e98dc"}
         io.github.kotoba-lang/langchain
-        {:local/root "/Users/junkawasaki/github/com-junkawasaki/orgs/kotoba-lang/langchain"}}
+        {:git/url "https://github.com/kotoba-lang/langchain.git"
+                                     :git/sha "51e7b61ec3d55e917d5dc77dac145197cb3340df"}}
  :aliases
  {:test {:extra-paths ["test"]
          :extra-deps {io.github.cognitect-labs/test-runner
