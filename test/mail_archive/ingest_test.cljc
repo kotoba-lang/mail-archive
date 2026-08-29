@@ -4,7 +4,7 @@
   where request shape matters) and asserts on the transformed entity maps — plus
   an end-to-end backfill (pagination) and incremental sync against a real
   LangchainDbStore + a temp-dir BlobStore. No live account."
-  (:require [clojure.data.json :as json]
+  (:require [json.data-json :as json]
             [clojure.string :as str]
             [clojure.test :refer [deftest is]]
             [mail-archive.blob-store :as blob-store]

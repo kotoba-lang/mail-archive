@@ -19,7 +19,7 @@
   `CredentialStore` protocol are portable. Tests inject a fake in-memory
   CredentialStore and a stub :http-fn."
   (:require [oauth2.core :as oauth2]
-            #?(:clj [clojure.data.json :as json])
+            #?(:clj [json.data-json :as json])
             #?(:clj [clojure.java.shell :as shell])
             #?(:clj [clojure.string :as str])
             #?(:clj [gmail.client :as gclient])))
