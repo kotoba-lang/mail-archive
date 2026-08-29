@@ -1,6 +1,4 @@
 {
   "private": true,
-  "dependencies": {
-    "datascript": "^1.7.8"
-  }
+  "description": "mail-archive nbb query backend uses kotoba-lang/datalog via nbb.edn; no npm runtime deps."
 }
