@@ -3,7 +3,8 @@
 Bulk-archive a Gmail mailbox into content-addressed `.eml`-style blobs plus a
 queryable index, in the kotoba-lang idiom: portable `.cljc`, **one `Store`
 protocol with two backends that must return identical query answers** — a
-Datomic-API-compatible store (`langchain.db`) and real DataScript (npm, via nbb) —
+Datomic-API-compatible store (`langchain.db`) and a datalog-backed nbb query
+surface (`kotoba-lang/datalog`, via `mail-archive.datascript-store`) —
 loaded from one shared schema, proven equal by a shared contract test.
 
 ## Why this exists
@@ -11,9 +12,8 @@ loaded from one shared schema, proven equal by a shared contract test.
 A prior session built an ad hoc Python/bash pipeline
 (`orgs/personal/bin/*.py`, `orgs/personal/bin/datomic/`) that bulk-archives a
 Gmail mailbox into content-addressed `.eml` files + a Datomic (JVM,
-`com.datomic/local`) index, with a *separate*, hand-written nbb+npm-datascript
-loader for DataScript queries that flattened `email/from`/`to`/`cc` to bare
-strings (losing the person graph). That worked, but the two query surfaces
+`com.datomic/local`) index, with a *separate*, hand-written nbb query loader
+that flattened `email/from`/`to`/`cc` to bare strings (losing the person graph). That worked, but the two query surfaces
 diverged (Datomic joined a person graph; the DataScript script did not), the
 schema was Datomic-native (`{:db/ident ...}` vectors), and none of it was
 portable `.cljc` or tested.
@@ -21,7 +21,7 @@ portable `.cljc` or tested.
 This repo re-does that capability properly: the **same schema** and the **same
 Datalog** answer identically whether the backend is the Datomic-API store
 (`langchain.db` — swappable to Datomic Local or a kotoba-server pod) or
-DataScript (browser-native / zero-JVM, via nbb). It generalizes the
+`kotoba-lang/datalog` (browser-native / zero-JVM, via nbb). It generalizes the
 `Store`-protocol / dual-backend / shared-contract-test shape ADR-2607122000
 established for `cloud-murakumo-market-intel` (itself after `gftd-talent-actor`'s
 `talent.store`) to a domain that actually needs entity **refs** (email → person,
@@ -37,10 +37,9 @@ mail-archive.schema.edn        the SSoT schema map (DataScript-style, not Datomi
 mail-archive.store             Store protocol (transact! / q / pull) + LangchainDbStore
                                (Datomic-API-compatible, thin delegation to langchain.db)
 
-mail-archive.datascript-store  the DataScript backend (npm datascript, nbb-only): same three
+mail-archive.datascript-store  the nbb query backend (`kotoba-lang/datalog`): same three
                                ops as plain fns, with TWO-PASS ref flattening so it accepts the
-                               same nested-map tx-data langchain.db does (DataScript's own
-                               nested-map expansion is unreachable through the JS interface)
+                               same nested-map tx-data langchain.db does
 
 mail-archive.blob-store        BlobStore protocol + LocalDirBlobStore (content-addressed by
                                sha256 hex = cid, one file per blob)
@@ -56,8 +55,8 @@ mail-archive.ingest            backfill (paginate gmail.threads, decode base64ur
 
 **Portability / runtime.** `store`/`blob-store`/`auth`/`ingest` are `.cljc` but
 JVM-only in practice: they lean on `com-gmail` (JVM-only today), `java.util.Base64`,
-`java.time`, and macOS `security`. The **DataScript backend is a separate nbb
-entrypoint** (`.cljs`) because npm `datascript` is only reachable from nbb —
+`java.time`, and macOS `security`. The **datalog query backend is a separate nbb
+entrypoint** (`.cljs`) backed by `kotoba-lang/datalog` via `nbb.edn` —
 it can't be `:require`d from a JVM `.cljc` namespace. Address normalization
 (`mail.message`) and the OAuth request/response shaping (`oauth2.core`) are the
 genuinely portable parts.
@@ -73,7 +72,7 @@ person ref, by-label, date-range, blob ref join) — asserting identical answers
 
 - `:email/date` is a `YYYYMMDD` **integer**, not an ISO string, so date-range
   queries use numeric `<`/`<=` — the only comparators `langchain.db` and
-  DataScript share (both treat `<`/`<=` as numeric).
+  `datalog.core` share (both treat `<`/`<=` as numeric).
 - `:email/cid` = sha256 hex of the reconstructed source bytes (the bytes the
   BlobStore stores), so the content id is reproducible from content.
 - Incremental-sync's `historyId` cursor is caller-owned (injected
@@ -109,8 +108,7 @@ person ref, by-label, date-range, blob ref join) — asserting identical answers
 
 ```sh
 clojure -M:test                                       # JVM: store / ingest / auth contract tests
-npm install                                            # once, for the datascript npm dep
-npx nbb test/mail_archive/datascript_contract_test.cljs  # DataScript parity twin (exits non-zero on mismatch)
+npx nbb test/mail_archive/datascript_contract_test.cljs  # nbb datalog parity twin (exits non-zero on mismatch)
 clojure -M:lint                                        # clj-kondo
 ```
 

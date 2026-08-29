@@ -1,3 +1,4 @@
-;; nbb resolves `mail-archive.datascript-store` and the contract-test namespace
-;; from these paths when running `npx nbb test/mail_archive/datascript_contract_test.cljs`.
-{:paths ["src" "test"]}
+{:deps {io.github.kotoba-lang/datalog
+        {:git/url "https://github.com/kotoba-lang/datalog.git"
+         :git/sha "d18513af533917539c56435de6fb1426738da31a"}}
+ :paths ["src" "test"]}

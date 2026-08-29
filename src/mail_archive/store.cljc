@@ -5,15 +5,16 @@
     - LangchainDbStore  — wraps `langchain.db` (a Datomic-API-compatible in-memory
                           EAV store; swappable to Datomic Local or a kotoba-server
                           pod without touching a query). Defined here.
-    - DataScriptStore   — real DataScript (npm `datascript`), reachable only from
-                          nbb. Because npm datascript is `(:require [\"datascript\"])`
-                          — not loadable from a JVM `.cljc` namespace — that backend
-                          lives in its own nbb entrypoint `mail_archive/datascript_store.cljs`.
-                          The protocol is declared HERE so its shape is documented
-                          once; see that file's header for why it implements the same
-                          three operations as plain fns rather than reify-ing this
-                          protocol (nbb's SCI loader can't cleanly `:require` a JVM
-                          `.cljc` protocol namespace).
+    - DataScriptStore   — historical name for the nbb query backend in
+                          `mail_archive/datascript_store.cljs`, now backed by
+                          `kotoba-lang/datalog` instead of npm `datascript`.
+                          Because that dependency is wired through `nbb.edn`, not
+                          JVM `deps.edn`, the backend lives in its own nbb
+                          entrypoint. The protocol is declared HERE so its shape
+                          is documented once; see that file's header for why it
+                          implements the same three operations as plain fns rather
+                          than reify-ing this protocol (nbb's SCI loader can't
+                          cleanly `:require` a JVM `.cljc` protocol namespace).
 
   This is the same 'swap the backend, not the query' shape `gftd-talent-actor`'s
   `talent.store` proves for its domain and ADR-2607122000 generalizes; a shared
