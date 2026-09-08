@@ -19,7 +19,7 @@
   `:blob/cid` / `:email/cid` into one entity — exactly as `langchain.db` does —
   so refs resolve identically on both sides."
   (:require [clojure.edn :as edn]
-            [clojure.string :as str]
+            [kotoba.lang.text :as str]
             [datalog.core :as dl]
             [datalog.index :as index]
             ["fs" :as fs]))
