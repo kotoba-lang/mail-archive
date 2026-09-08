@@ -1,7 +1,7 @@
 (ns mail-archive.auth-test
   "OAuth token flow tested against a stub :http-fn (capturing the request shape)
   and a fake in-memory CredentialStore — no Keychain, no network."
-  (:require [clojure.string :as str]
+  (:require [kotoba.lang.text :as str]
             [clojure.test :refer [deftest is]]
             [mail-archive.auth :as auth]))
 

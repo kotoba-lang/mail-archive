@@ -5,7 +5,7 @@
   an end-to-end backfill (pagination) and incremental sync against a real
   LangchainDbStore + a temp-dir BlobStore. No live account."
   (:require [json.data-json :as json]
-            [clojure.string :as str]
+            [kotoba.lang.text :as str]
             [clojure.test :refer [deftest is]]
             [mail-archive.blob-store :as blob-store]
             [mail-archive.ingest :as ingest]

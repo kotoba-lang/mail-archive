@@ -29,7 +29,7 @@
 
   Content id: `:email/cid` = sha256 hex of the reconstructed source bytes (the
   bytes the BlobStore actually stores), so the cid is reproducible from content."
-  (:require [clojure.string :as str]
+  (:require [kotoba.lang.text :as str]
             [mail.inbound :as inbound]
             [mail-archive.blob-store :as blob-store]
             [mail-archive.store :as store]
@@ -42,8 +42,8 @@
    (defn header-value
      "Case-insensitive lookup of a Gmail payload header (`[{:name :value} ...]`)."
      [headers name]
-     (let [want (str/lower-case name)]
-       (some (fn [h] (when (= want (str/lower-case (str (:name h)))) (:value h))) headers))))
+     (let [want (str/lower name)]
+       (some (fn [h] (when (= want (str/lower (str (:name h)))) (:value h))) headers))))
 
 #?(:clj
    (defn split-addresses

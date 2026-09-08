@@ -21,7 +21,7 @@
   (:require [oauth2.core :as oauth2]
             #?(:clj [json.data-json :as json])
             #?(:clj [clojure.java.shell :as shell])
-            #?(:clj [clojure.string :as str])
+            #?(:clj [kotoba.lang.text :as str])
             #?(:clj [gmail.client :as gclient])))
 
 (def google-token-endpoint "https://oauth2.googleapis.com/token")
