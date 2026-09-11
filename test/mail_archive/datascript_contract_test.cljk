@@ -1,10 +1,10 @@
 (ns mail-archive.datascript-contract-test
-  "Parity twin of test/mail_archive/store_contract_test.cljc, for the DataScript
+  "Parity twin of test/mail_archive/store_contract_test.cljk, for the DataScript
   backend. Runs the SAME sample entities through DataScriptStore and the SAME
   Datalog queries, asserting the SAME answers as the JVM contract test — the
   actual proof of ADR-0001's dual-backend query parity.
 
-  Run:  npx nbb test/mail_archive/datascript_contract_test.cljs   (exits non-zero on any mismatch)
+  Run:  npx nbb test/mail_archive/datascript_contract_test.cljk   (exits non-zero on any mismatch)
 
   The sample data + expected results are duplicated literally from the twin file
   (a JVM clojure.test ns and an nbb script can't share a require in this repo's

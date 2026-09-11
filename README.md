@@ -63,8 +63,8 @@ genuinely portable parts.
 
 **Query parity (the point).** Every HTTP boundary is an injectable `:http-fn`
 (`{:url :method :headers :body} -> {:status :body}`, com-gmail's convention), so
-nothing here needs a live account to test. `test/mail_archive/store_contract_test.cljc`
-(JVM) and `test/mail_archive/datascript_contract_test.cljs` (nbb) transact the
+nothing here needs a live account to test. `test/mail_archive/store_contract_test.cljk`
+(JVM) and `test/mail_archive/datascript_contract_test.cljk` (nbb) transact the
 **same** sample entities and run the **same** Datalog (by-thread, by-sender via a
 person ref, by-label, date-range, blob ref join) — asserting identical answers.
 
@@ -108,7 +108,7 @@ person ref, by-label, date-range, blob ref join) — asserting identical answers
 
 ```sh
 clojure -M:test                                       # JVM: store / ingest / auth contract tests
-npx nbb test/mail_archive/datascript_contract_test.cljs  # nbb datalog parity twin (exits non-zero on mismatch)
+npx nbb test/mail_archive/datascript_contract_test.cljk  # nbb datalog parity twin (exits non-zero on mismatch)
 clojure -M:lint                                        # clj-kondo
 ```
 
