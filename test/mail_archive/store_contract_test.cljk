@@ -5,7 +5,7 @@
   a person ref, by-label, date-range, blob ref join) — proving the Datomic-shaped
   backend answers them correctly.
 
-  PARITY: `test/mail_archive/datascript_contract_test.cljs` transacts the SAME
+  PARITY: `test/mail_archive/datascript_contract_test.cljk` transacts the SAME
   sample entities and runs the SAME queries against the DataScript backend and
   asserts the SAME answers. The sample data + expected results are duplicated
   literally in that twin file (JVM clojure.test and an nbb script can't share a
