@@ -109,5 +109,5 @@ ingest             backfill! (paginate + decode + normalize + content-address + 
   deviation — same auth/transport seam, still fully stubbable). If com-gmail grows
   those namespaces, ingest can switch to them without changing its callers.
 - Follow-up (not done by this ADR): west manifest registration
-  (`nbb scripts/gen-west-manifest.cljs --entry mail-archive`) and RAD/registry
+  (`kbb --backend sci scripts/gen-west-manifest.cljk --entry mail-archive`) and RAD/registry
   bookkeeping, handled by the superproject's API-based manifest tooling.

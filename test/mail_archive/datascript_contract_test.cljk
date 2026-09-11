@@ -4,7 +4,7 @@
   Datalog queries, asserting the SAME answers as the JVM contract test — the
   actual proof of ADR-0001's dual-backend query parity.
 
-  Run:  npx nbb test/mail_archive/datascript_contract_test.cljk   (exits non-zero on any mismatch)
+  Run:  kbb --backend sci test/mail_archive/datascript_contract_test.cljk   (exits non-zero on any mismatch)
 
   The sample data + expected results are duplicated literally from the twin file
   (a JVM clojure.test ns and an nbb script can't share a require in this repo's

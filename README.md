@@ -107,9 +107,9 @@ person ref, by-label, date-range, blob ref join) — asserting identical answers
 ## Tests
 
 ```sh
-clojure -M:test                                       # JVM: store / ingest / auth contract tests
-npx nbb test/mail_archive/datascript_contract_test.cljk  # nbb datalog parity twin (exits non-zero on mismatch)
-clojure -M:lint                                        # clj-kondo
+kbb -M:test                                       # JVM: store / ingest / auth contract tests
+kbb --backend sci test/mail_archive/datascript_contract_test.cljk  # nbb datalog parity twin (exits non-zero on mismatch)
+kbb -M:lint                                        # clj-kondo
 ```
 
 No live Gmail account required — every test injects a stub `:http-fn` and a fake
