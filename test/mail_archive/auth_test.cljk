@@ -2,7 +2,7 @@
   "OAuth token flow tested against a stub :http-fn (capturing the request shape)
   and a fake in-memory CredentialStore — no Keychain, no network."
   (:require [kotoba.lang.text :as str]
-            [clojure.test :refer [deftest is]]
+            [kotoba.test :refer [deftest is]]
             [mail-archive.auth :as auth]))
 
 (defrecord FakeCred [store]
