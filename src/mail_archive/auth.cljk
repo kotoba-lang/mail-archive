@@ -20,7 +20,7 @@
   CredentialStore and a stub :http-fn."
   (:require [oauth2.core :as oauth2]
             #?(:clj [json.data-json :as json])
-            #?(:clj [clojure.java.shell :as shell])
+            #?(:clj [kotoba.process :as shell])
             #?(:clj [kotoba.lang.text :as str])
             #?(:clj [gmail.client :as gclient])))
 

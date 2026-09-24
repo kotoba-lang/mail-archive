@@ -4,7 +4,7 @@
   where request shape matters) and asserts on the transformed entity maps — plus
   an end-to-end backfill (pagination) and incremental sync against a real
   LangchainDbStore + a temp-dir BlobStore. No live account."
-  (:require [json.data-json :as json]
+  (:require [kotoba.bytes :as kbytes] [kotoba.io :as kio] [json.data-json :as json]
             [kotoba.lang.text :as str]
             [kotoba.test :refer [deftest is]]
             [mail-archive.blob-store :as blob-store]
@@ -12,7 +12,7 @@
             [mail-archive.store :as store]))
 
 (defn- b64url [s]
-  (.encodeToString (java.util.Base64/getUrlEncoder) (.getBytes ^String s "UTF-8")))
+  (kbytes/base64url-encode (kbytes/utf8-bytes ^String s)))
 
 (defn- ms-of [iso] (str (.toEpochMilli (java.time.Instant/parse iso))))
 
@@ -84,8 +84,8 @@
 
 (defn- temp-blob-store []
   (blob-store/local-dir-blob-store
-   (str (java.nio.file.Files/createTempDirectory
-         "mail-archive-blobs" (into-array java.nio.file.attribute.FileAttribute [])))))
+   (str (kio/temp-dir
+         "mail-archive-blobs"))))
 
 (def ^:private thread-t1
   {:messages [(msg {:id "msg-1" :thread-id "t1" :subject "Hello"
