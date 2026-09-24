@@ -18,7 +18,7 @@
   Unique-identity upsert then unifies tempids carrying the same `:person/id` /
   `:blob/cid` / `:email/cid` into one entity — exactly as `langchain.db` does —
   so refs resolve identically on both sides."
-  (:require [clojure.edn :as edn]
+  (:require [kotoba.lang.edn :as edn]
             [kotoba.lang.text :as str]
             [datalog.core :as dl]
             [datalog.index :as index]

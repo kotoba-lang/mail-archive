@@ -26,7 +26,7 @@
   ref attributes auto-expanding to fresh tempids (see `langchain.db/expand-entity-map`),
   and `[:db/add e a v]` vectors. `q` is Datalog; the db source is supplied by the
   Store, so callers pass only extra `:in` inputs (a vector) — never the db itself."
-  (:require #?(:clj [clojure.edn :as edn])
+  (:require #?(:clj [kotoba.lang.edn :as edn])
             #?(:clj [clojure.java.io :as io])
             [langchain.db :as ldb]))
 
