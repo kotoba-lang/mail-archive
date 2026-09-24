@@ -6,7 +6,7 @@
   LangchainDbStore + a temp-dir BlobStore. No live account."
   (:require [json.data-json :as json]
             [kotoba.lang.text :as str]
-            [clojure.test :refer [deftest is]]
+            [kotoba.test :refer [deftest is]]
             [mail-archive.blob-store :as blob-store]
             [mail-archive.ingest :as ingest]
             [mail-archive.store :as store]))

@@ -11,7 +11,7 @@
   literally in that twin file (JVM clojure.test and an nbb script can't share a
   require in this repo's toolchain) — keep the two in lock-step. This is the
   'swap the backend, not the query' property of ADR-0001 / ADR-2607122000."
-  (:require [clojure.test :refer [deftest is]]
+  (:require [kotoba.test :refer [deftest is]]
             [mail-archive.store :as store]))
 
 ;; ── shared sample data (KEEP IN SYNC with datascript_contract_test.cljs) ──
