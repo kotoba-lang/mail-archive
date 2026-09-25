@@ -29,7 +29,7 @@
 
   Content id: `:email/cid` = sha256 hex of the reconstructed source bytes (the
   bytes the BlobStore actually stores), so the cid is reproducible from content."
-  (:require [kotoba.lang.text :as str]
+  (:require [kotoba.bytes :as kbytes] [kotoba.lang.text :as str]
             [mail.inbound :as inbound]
             [mail-archive.blob-store :as blob-store]
             [mail-archive.store :as store]
@@ -79,11 +79,11 @@
 
 #?(:clj
    (defn- decode-part-bytes ^bytes [^String data]
-     (when data (.decode (java.util.Base64/getUrlDecoder) data))))
+     (when data (kbytes/base64url-decode-bytes data))))
 
 #?(:clj
    (defn- decode-part-text [data]
-     (when-let [^bytes b (decode-part-bytes data)] (String. b "UTF-8"))))
+     (when-let [^bytes b (decode-part-bytes data)] (kbytes/utf8-string b))))
 
 #?(:clj
    (defn text-body
@@ -185,7 +185,7 @@
      transacted entity map."
      [store blob-store message]
      (let [source (reconstruct-source message)
-           bytes (.getBytes source "UTF-8")
+           bytes (kbytes/utf8-bytes source)
            cid (blob-store/put! blob-store bytes)
            entity (message->email-entity message {:cid cid :entity (blob-entity cid bytes cid)})]
        (store/transact! store [entity])

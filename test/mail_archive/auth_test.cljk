@@ -1,7 +1,7 @@
 (ns mail-archive.auth-test
   "OAuth token flow tested against a stub :http-fn (capturing the request shape)
   and a fake in-memory CredentialStore — no Keychain, no network."
-  (:require [kotoba.lang.text :as str]
+  (:require [kotoba.lang.error :as kerror] [kotoba.lang.text :as str]
             [kotoba.test :refer [deftest is]]
             [mail-archive.auth :as auth]))
 
@@ -46,7 +46,7 @@
 (deftest token-endpoint-error-response-throws
   (let [[_ http-fn] (capturing 200 "{\"error\":\"invalid_grant\",\"error_description\":\"bad\"}")]
     (is (thrown-with-msg?
-         clojure.lang.ExceptionInfo #"token endpoint error"
+         kerror/ExceptionInfo #"token endpoint error"
          (auth/refresh! {:refresh-token "RT" :client-id "CID" :client-secret "SEC"}
                         {:http-fn http-fn :token-endpoint "https://ep/token"})))))
 
@@ -65,7 +65,7 @@
   (let [cred (->FakeCred (atom {"google-oauth-client" "{\"client_id\":\"CID\",\"client_secret\":\"SEC\"}"}))
         [_ http-fn] (capturing 200 "{\"access_token\":\"AT\"}")]
     (is (thrown-with-msg?
-         clojure.lang.ExceptionInfo #"no refresh token"
+         kerror/ExceptionInfo #"no refresh token"
          (auth/access-token cred "jun" {:http-fn http-fn :token-endpoint "https://ep/token"})))))
 
 (deftest authorize-url-has-pkce-and-offline-access
