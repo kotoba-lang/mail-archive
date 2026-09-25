@@ -27,7 +27,7 @@
   and `[:db/add e a v]` vectors. `q` is Datalog; the db source is supplied by the
   Store, so callers pass only extra `:in` inputs (a vector) — never the db itself."
   (:require #?(:clj [kotoba.lang.edn :as edn])
-            #?(:clj [clojure.java.io :as io])
+            #?(:clj [kotoba.io :as io])
             [langchain.db :as ldb]))
 
 (defprotocol Store
